@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
 
-    steps:
+    steps:ьфлу ву
       # Шаг 1: клонируем репозиторий (он уже твой форк)
       - uses: actions/checkout@v4
 
@@ -22,7 +22,7 @@ jobs:
       # Шаг 3: подготавливаем конфиг
       - name: Prepare config
         run: |
-          make defconfig
+          make defconfig FORCE=1
 
       # Шаг 4: чистим target/linux (важно для патчей DTS)
       - name: Clean target
@@ -32,7 +32,7 @@ jobs:
       # Шаг 5: собираем прошивку
       - name: Build firmware
         run: |
-          make -j$(nproc)
+          make -j$(nproc) FORCE=1
 
       # Шаг 6: загружаем артефакты (готовые образы)
       - name: Upload firmware
