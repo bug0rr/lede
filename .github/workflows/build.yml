@@ -1,0 +1,42 @@
+name: OpenWrt 21.02 Xiaomi 4C USB
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      # Шаг 1: клонируем репозиторий (он уже твой форк)
+      - uses: actions/checkout@v4
+
+      # Шаг 2: устанавливаем зависимости для сборки OpenWrt
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential clang flex bison \
+          g++ gawk gcc-multilib gettext git libncurses5-dev \
+          libssl-dev python3-distutils rsync unzip zlib1g-dev file wget
+
+      # Шаг 3: подготавливаем конфиг
+      - name: Prepare config
+        run: |
+          make defconfig
+
+      # Шаг 4: чистим target/linux (важно для патчей DTS)
+      - name: Clean target
+        run: |
+          make target/linux/clean
+
+      # Шаг 5: собираем прошивку
+      - name: Build firmware
+        run: |
+          make -j$(nproc)
+
+      # Шаг 6: загружаем артефакты (готовые образы)
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-mi4c-usb
+          path: bin/targets/
