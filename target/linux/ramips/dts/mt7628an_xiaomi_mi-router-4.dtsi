@@ -102,6 +102,11 @@
 	};
 };
 
-&wmac {
-	status = "okay";
+/* Включение USB */
+&ehci {
+    status = "okay";
+};
+
+&ohci {
+    status = "okay";
 };
